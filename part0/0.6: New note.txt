@@ -1,0 +1,15 @@
+
+note over browser:
+when user click the send button, 
+- the js code executes the AJAX POST 
+- prevent the default POST to server
+- render new update note
+end note
+
+browser->server: https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server-->browser: return a json data {message: "note created"}
+
+note over browser:
+browser can do more thing after receive 201 status from server
+but this code is done in this server.
+end note
