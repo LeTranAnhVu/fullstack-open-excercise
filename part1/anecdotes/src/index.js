@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import ReactDOM from 'react-dom'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Array(props.anecdotes.length).fill(0))
   const randomPick = () => {
     const len = props.anecdotes.length
-    if(len) {
+    if (len) {
       // random int between > 0 and < length
-      const number = Math.floor(Math.random() * (len));
+      const number = Math.floor(Math.random() * (len))
       setSelected(number)
     }
+  }
+  const vote= () => {
+    const clonedArr = [...points]
+    clonedArr[selected]++
+    setPoints(clonedArr)
   }
   return (
     <div>
       <p>{props.anecdotes[selected]}</p>
+      <p>has {points[selected]} votes</p>
+      <button onClick={vote}>vote</button>
       <button onClick={randomPick}>next anecdote</button>
     </div>
   )
@@ -29,6 +37,6 @@ const anecdotes = [
 ]
 
 ReactDOM.render(
-  <App anecdotes={anecdotes} />,
+  <App anecdotes={anecdotes}/>,
   document.getElementById('root')
 )
