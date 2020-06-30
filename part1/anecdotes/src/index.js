@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Array(props.anecdotes.length).fill(0))
+  const [maxVoteIndex, setMaxVoteIndex] = useState(null)
   const randomPick = () => {
     const len = props.anecdotes.length
     if (len) {
@@ -16,13 +17,28 @@ const App = (props) => {
     const clonedArr = [...points]
     clonedArr[selected]++
     setPoints(clonedArr)
+
   }
+
+  useEffect(() => {
+    // find index of max votes
+    const maxIndex = points.indexOf(Math.max(...points))
+    setMaxVoteIndex(maxIndex)
+  }, [points])
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
       <button onClick={vote}>vote</button>
       <button onClick={randomPick}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      {
+        maxVoteIndex !== null && <>
+          <p>{props.anecdotes[maxVoteIndex]}</p>
+          <p>has {points[maxVoteIndex]} votes</p>
+        </>
+      }
     </div>
   )
 }
