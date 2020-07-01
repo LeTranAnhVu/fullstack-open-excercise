@@ -61,7 +61,12 @@ const App = () => {
       // prevent user input exist name
       const existedPerson = persons.find(person => person.name === trimmedName)
       if (existedPerson) {
-        window.alert(`${trimmedName} is already added to phonebook`)
+        const answer = window.confirm(`${trimmedName} is already added to phonebook, replace the old number with new one`)
+        if(answer) {
+          personService.updateById(existedPerson.id, {...existedPerson, number: trimmedNumber}).then(({data}) => {
+              fetchPerson()
+          })
+        }
       } else {
         // send to server
         personService.create({name: trimmedName, number: trimmedNumber}).then(({data}) => {
@@ -76,7 +81,6 @@ const App = () => {
       }
     }
   }
-
   const onDeletePerson = (person) => {
     const answer = window.confirm(`Delete ${person.name}?`)
     if(answer) {
