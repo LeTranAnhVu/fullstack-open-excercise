@@ -23,8 +23,7 @@ const App = () => {
     setSearchName(name)
   }
 
-  // fetch data from server
-  useEffect(() => {
+  const fetchPerson = () => {
     personService.getAll().then(({data}) => {
       if(data){
         setPersons([...data])
@@ -32,6 +31,11 @@ const App = () => {
     }).catch(err => {
       console.error(err)
     })
+  }
+
+  // fetch data from server
+  useEffect(() => {
+    fetchPerson()
   },[])
 
   // whenever the person change such as push new person, then reset filter
@@ -59,9 +63,6 @@ const App = () => {
       if (existedPerson) {
         window.alert(`${trimmedName} is already added to phonebook`)
       } else {
-        // allow to add
-        setPersons([...persons, {name: trimmedName, number: trimmedNumber}])
-
         // send to server
         personService.create({name: trimmedName, number: trimmedNumber}).then(({data}) => {
           if(data.id) {
@@ -75,6 +76,16 @@ const App = () => {
       }
     }
   }
+
+  const onDeletePerson = (person) => {
+    const answer = window.confirm(`Delete ${person.name}?`)
+    if(answer) {
+      personService.deleteById(person.id).then(({data}) => {
+        fetchPerson()
+      } )
+    }
+
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -82,7 +93,7 @@ const App = () => {
       <h3>Add New</h3>
       <PersonForm name={newName} number={newNumber} updateNewValue={updateNewValue} updatePhoneBook={updatePhoneBook}/>
       <h2>Numbers</h2>
-      <Persons persons={displayPersons}/>
+      <Persons onDeletePerson={onDeletePerson} persons={displayPersons}/>
     </div>
   )
 }
