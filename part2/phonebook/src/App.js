@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import axios from 'axios'
+import personService from './services/person'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -25,8 +25,7 @@ const App = () => {
 
   // fetch data from server
   useEffect(() => {
-    const url = 'http://localhost:3001/persons'
-    axios.get(url).then(({data}) => {
+    personService.getAll().then(({data}) => {
       if(data){
         setPersons([...data])
       }
@@ -62,6 +61,13 @@ const App = () => {
       } else {
         // allow to add
         setPersons([...persons, {name: trimmedName, number: trimmedNumber}])
+
+        // send to server
+        personService.create({name: trimmedName, number: trimmedNumber}).then(({data}) => {
+          if(data.id) {
+            setPersons([...persons, {...data}])
+          }
+        })
 
         // reset input field
         setNewName('')
