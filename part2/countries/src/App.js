@@ -13,7 +13,6 @@ const App = () => {
     axios.get(url).then(({data}) => {
       if (data) {
         setCountries(data)
-        console.log(data)
       }
     }).catch(err => {
       console.error(err)
