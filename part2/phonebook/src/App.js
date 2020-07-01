@@ -1,9 +1,35 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 const App = () => {
-  const [persons, setPersons] = useState([{name: 'Arto Hellas', number: '03-333-3232'}])
+  const [persons, setPersons] = useState([
+    {name: 'Arto Hellas', number: '040-123456'},
+    {name: 'Ada Lovelace', number: '39-44-5323523'},
+    {name: 'Dan Abramov', number: '12-43-234345'},
+    {name: 'Mary Poppendieck', number: '39-23-6423122'}
+  ])
+  const [displayPersons, setDisplayPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [searchName, setSearchName] = useState('')
+
+  const filterByName = (name) => {
+    name = name.trim()
+    if (!name) {
+      // display all
+      setDisplayPersons([...persons])
+    } else {
+      let re = new RegExp(name, "i") // case insensitive
+      let matchPersons = persons.filter(person => person.name.match(re))
+      setDisplayPersons([...matchPersons])
+    }
+    setSearchName(name)
+  }
+
+  // whenever the person change such as push new person, then reset filter
+  useEffect(() => {
+    filterByName('')
+  }, [persons])
+
 
   const updateNewValue = (e) => {
     const fieldName = e.target.name
@@ -36,6 +62,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        Filter shown with <input value={searchName} type="text" onChange={(e) => filterByName(e.target.value)}/>
+      </div>
       <form>
         <div>
           name: <input value={newName} type="text" name={'name'} onChange={updateNewValue}/>
@@ -49,7 +78,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => <li key={person.name}>{person.name} {person.number}</li>)}
+        {displayPersons.map((person) => <li key={person.name}>{person.name} {person.number}</li>)}
       </ul>
     </div>
   )
