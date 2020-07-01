@@ -3,6 +3,7 @@ import personService from './services/person'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,6 +11,11 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
+  const [notification, setNotification] = useState({
+    message: null,
+    type: null
+  })
+
 
   const filterByName = (name) => {
     if (!name) {
@@ -25,7 +31,7 @@ const App = () => {
 
   const fetchPerson = () => {
     personService.getAll().then(({data}) => {
-      if(data){
+      if (data) {
         setPersons([...data])
       }
     }).catch(err => {
@@ -36,7 +42,7 @@ const App = () => {
   // fetch data from server
   useEffect(() => {
     fetchPerson()
-  },[])
+  }, [])
 
   // whenever the person change such as push new person, then reset filter
   useEffect(() => {
@@ -62,18 +68,32 @@ const App = () => {
       const existedPerson = persons.find(person => person.name === trimmedName)
       if (existedPerson) {
         const answer = window.confirm(`${trimmedName} is already added to phonebook, replace the old number with new one`)
-        if(answer) {
-          personService.updateById(existedPerson.id, {...existedPerson, number: trimmedNumber}).then(({data}) => {
-              fetchPerson()
-          })
+        if (answer) {
+          personService.updateById(existedPerson.id, {...existedPerson, number: trimmedNumber})
+            .then(({data}) => {
+              setNotification({message: 'update success', type: 'success'})
+            })
+            .catch(err => {
+              setNotification({
+                message: `information of ${existedPerson.name} has already been removed from server`,
+                type: 'error'
+              })
+
+            })
+            .finally(() => fetchPerson())
         }
       } else {
         // send to server
-        personService.create({name: trimmedName, number: trimmedNumber}).then(({data}) => {
-          if(data.id) {
-            setPersons([...persons, {...data}])
-          }
-        })
+        personService.create({name: trimmedName, number: trimmedNumber})
+          .then(({data}) => {
+            if (data.id) {
+              setPersons([...persons, {...data}])
+              setNotification({message: `added ${data.name}`, type: 'success'})
+            }
+          })
+          .catch(err => {
+            setNotification({message: `cannot added new person`, type: 'error'})
+          })
 
         // reset input field
         setNewName('')
@@ -83,16 +103,27 @@ const App = () => {
   }
   const onDeletePerson = (person) => {
     const answer = window.confirm(`Delete ${person.name}?`)
-    if(answer) {
-      personService.deleteById(person.id).then(({data}) => {
-        fetchPerson()
-      } )
+    if (answer) {
+      personService.deleteById(person.id)
+        .then(({data}) => {
+        })
+        .catch(err => {
+          setNotification({
+            message: `information of ${person.name} has already been removed from server`,
+            type: 'error'
+          })
+        })
+        .finally(() => {
+          fetchPerson()
+        })
     }
-
   }
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {notification.message && <Notification message={notification.message} type={notification.type}/>}
+
       <Filter searchName={searchName} filterByName={filterByName}/>
       <h3>Add New</h3>
       <PersonForm name={newName} number={newNumber} updateNewValue={updateNewValue} updatePhoneBook={updatePhoneBook}/>
