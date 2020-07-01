@@ -1,4 +1,7 @@
 import React, {useEffect, useState} from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -18,7 +21,7 @@ const App = () => {
       // display all
       setDisplayPersons([...persons])
     } else {
-      let re = new RegExp(name, "i") // case insensitive
+      let re = new RegExp(name, 'i') // case insensitive
       let matchPersons = persons.filter(person => person.name.match(re))
       setDisplayPersons([...matchPersons])
     }
@@ -62,24 +65,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter shown with <input value={searchName} type="text" onChange={(e) => filterByName(e.target.value)}/>
-      </div>
-      <form>
-        <div>
-          name: <input value={newName} type="text" name={'name'} onChange={updateNewValue}/>
-        </div>
-        <div>
-          number: <input value={newNumber} type="text" name={'number'} onChange={updateNewValue}/>
-        </div>
-        <div>
-          <button onClick={updatePhoneBook} type="submit">add</button>
-        </div>
-      </form>
+      <Filter searchName={searchName} filterByName={filterByName}/>
+      <h3>Add New</h3>
+      <PersonForm name={newName} number={newNumber} updateNewValue={updateNewValue} updatePhoneBook={updatePhoneBook}/>
       <h2>Numbers</h2>
-      <ul>
-        {displayPersons.map((person) => <li key={person.name}>{person.name} {person.number}</li>)}
-      </ul>
+      <Persons persons={displayPersons}/>
     </div>
   )
 }
