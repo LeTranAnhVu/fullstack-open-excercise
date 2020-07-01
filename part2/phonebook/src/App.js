@@ -12,7 +12,6 @@ const App = () => {
   const [searchName, setSearchName] = useState('')
 
   const filterByName = (name) => {
-    name = name.trim()
     if (!name) {
       // display all
       setDisplayPersons([...persons])
