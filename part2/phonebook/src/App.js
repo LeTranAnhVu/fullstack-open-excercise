@@ -59,6 +59,10 @@ const App = () => {
       setNewNumber(value)
     }
   }
+  const resetFields = () => {
+    setNewName('')
+    setNewNumber('')
+  }
   const updatePhoneBook = (e) => {
     e.preventDefault()
     const trimmedName = newName.trim()
@@ -72,13 +76,17 @@ const App = () => {
           personService.updateById(existedPerson.id, {...existedPerson, number: trimmedNumber})
             .then(({data}) => {
               setNotification({message: 'update success', type: 'success'})
+              resetFields()
             })
             .catch(err => {
-              setNotification({
-                message: `information of ${existedPerson.name} has already been removed from server`,
-                type: 'error'
-              })
-
+              if (err.response && err.response.data && err.response.data.error) {
+                setNotification({message: `${err.response.data.error}`, type: 'error'})
+              } else {
+                setNotification({
+                  message: `information of ${existedPerson.name} has already been removed from server`,
+                  type: 'error'
+                })
+              }
             })
             .finally(() => fetchPerson())
         }
@@ -89,15 +97,19 @@ const App = () => {
             if (data.id) {
               setPersons([...persons, {...data}])
               setNotification({message: `added ${data.name}`, type: 'success'})
+              resetFields()
             }
           })
           .catch(err => {
-            setNotification({message: `cannot added new person`, type: 'error'})
+            if (err.response && err.response.data && err.response.data.error) {
+              setNotification({message: `${err.response.data.error}`, type: 'error'})
+            } else {
+              setNotification({message: `cannot added new person`, type: 'error'})
+            }
           })
 
         // reset input field
-        setNewName('')
-        setNewNumber('')
+
       }
     }
   }
@@ -106,6 +118,10 @@ const App = () => {
     if (answer) {
       personService.deleteById(person.id)
         .then(({data}) => {
+          setNotification({
+            message: `removed ${person.name}`,
+            type: 'error'
+          })
         })
         .catch(err => {
           setNotification({
