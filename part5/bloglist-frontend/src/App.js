@@ -18,6 +18,13 @@ const App = () => {
     setBlogs(blogs)
   }
 
+  useEffect(() => {
+    // check token
+    const userEncoded = localstorage.getItem('user')
+    if (userEncoded) {
+      setUser(JSON.parse(userEncoded))
+    }
+  }, [])
 
   useEffect(() => {
     fetchBlogs()
@@ -26,19 +33,22 @@ const App = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const data = await login({username: username, password: password})
-      const token = data.token
-      const name = data.name
-      const id = data.id
+      const user = await login({username: username, password: password})
+      const token = user.token
+      const name = user.name
+      const id = user.id
 
       if (!token) {
         console.log('fail')
         return null
       }
       localstorage.saveItem('access_token', token)
-      localstorage.saveItem('username', username)
+      localstorage.saveItem('user', {username, name, id})
+
       setUser({username, name, id})
       console.log('login success')
+      setUsername('')
+      setPassword('')
     } catch (e) {
       if (e.response && e.response.data && e.response.data.error) {
         setErrorMessage(e.response.data.error)
@@ -72,11 +82,16 @@ const App = () => {
       <button type="submit">login</button>
     </form>
   )
+  const handlerLogout = () => {
+    localstorage.clearAll()
+    setUser(null)
+  }
+
 
   const afterLogin = () => (
     <div>
       <h2>blogs</h2>
-      <h2>{user.name} logged in</h2>
+      <h2>{user.name} logged in <button onClick={handlerLogout}>logout</button></h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog}/>
       )}
