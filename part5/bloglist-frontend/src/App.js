@@ -5,6 +5,8 @@ import {login} from './services/login'
 import localstorage from './utils/localstorage'
 
 import './App.css'
+import CreateBlogForm from './components/CreateBlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -16,6 +18,10 @@ const App = () => {
   const fetchBlogs = async () => {
     const blogs = await blogService.getAll()
     setBlogs(blogs)
+  }
+
+  const onNewBlogCreated = () => {
+    fetchBlogs()
   }
 
   useEffect(() => {
@@ -87,11 +93,12 @@ const App = () => {
     setUser(null)
   }
 
-
   const afterLogin = () => (
     <div>
       <h2>blogs</h2>
       <h2>{user.name} logged in <button onClick={handlerLogout}>logout</button></h2>
+      <CreateBlogForm onCreateSuccess={onNewBlogCreated}/>
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog}/>
       )}
