@@ -1,6 +1,12 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/api/persons'
+import {NODE_ENV} from '../../secrets'
+
+let baseUrl = 'http://localhost:3001/api/persons'
+
+if (NODE_ENV === 'production') {
+  baseUrl = '/api/persons'
+}
 
 const getAll = () => axios.get(baseUrl)
 

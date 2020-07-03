@@ -83,7 +83,7 @@ const App = () => {
                 setNotification({message: `${err.response.data.error}`, type: 'error'})
               } else {
                 setNotification({
-                  message: `information of ${existedPerson.name} has already been removed from server`,
+                  message: `Cannot update user`,
                   type: 'error'
                 })
               }
