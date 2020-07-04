@@ -1,0 +1,16 @@
+.blog {
+  border: 1px #ccc solid;
+  padding: 10px;
+}
+
+.blog p{
+ margin: 0;
+}
+
+.blog-detail {
+  display: block;
+}
+
+.blog-detail.hide {
+  display: none;
+}

@@ -1,13 +1,25 @@
 import axios from 'axios'
 import localstorage from '../utils/localstorage'
+
 const baseUrl = '/api/blogs'
 
-const getTokenFromLocal =  () => localstorage.getItem('access_token')
+const getTokenFromLocal = () => localstorage.getItem('access_token')
+
 axios.interceptors.request.use(config => {
   const token = getTokenFromLocal()
   config.headers['authorization'] = `bearer ${token}`
-  console.log(config)
   return config
+})
+
+axios.interceptors.response.use(function (response) {
+  return response
+}, function (error) {
+  if (500 === error.response.status) {
+    error.response.data = {error: '* Internal error'}
+    return Promise.reject(error)
+  } else {
+    return Promise.reject(error)
+  }
 })
 
 const getAll = async () => {
@@ -21,4 +33,4 @@ const create = async (payload) => {
 }
 
 
-export default { getAll, create }
+export default {getAll, create}
