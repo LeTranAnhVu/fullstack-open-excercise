@@ -79,4 +79,5 @@ describe('blog component test', () => {
     expect(fn.mock.calls.length).toBe(0)
     expect(lcGetItemSpy.mock.calls.length).toBe(1)
   })
+
 })
