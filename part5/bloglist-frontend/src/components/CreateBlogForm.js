@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import blogService from '../services/blogs'
 import Notification from './Notification'
+import PropTypes from 'prop-types'
 
 const CreateBlogForm = ({onCreateSuccess}) => {
   const [title, setTitle] = useState('')
@@ -66,8 +67,11 @@ const CreateBlogForm = ({onCreateSuccess}) => {
         </div>
       </form>
     </div>
-
   )
+}
+
+CreateBlogForm.propTypes = {
+  onCreateSuccess: PropTypes.func.isRequired,
 }
 
 export default CreateBlogForm

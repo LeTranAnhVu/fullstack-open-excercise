@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
-import blogService from '../services/blogs'
-import Notification from './Notification'
 import {login} from '../services/login'
 import localstorage from '../utils/localstorage'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({onLoginSuccess}) => {
   const [username, setUsername] = useState('')
@@ -72,8 +71,10 @@ const LoginForm = ({onLoginSuccess}) => {
       </div>
       <button type="submit">login</button>
     </form>
-
   )
+}
+LoginForm.propTypes = {
+  onLoginSuccess: PropTypes.func.isRequired,
 }
 
 export default LoginForm

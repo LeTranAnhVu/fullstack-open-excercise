@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import PropTypes from 'prop-types'
 import blogService from '../../services/blogs'
 import './Blog.css'
 import localstorage from '../../utils/localstorage'
@@ -21,12 +22,6 @@ const Blog = ({onUpdateSuccess, blog}) => {
       await blogService.likeById(id)
       onUpdateSuccess()
     } catch (e) {
-      let message = ''
-      if (e.response.data && e.response.data.error) {
-        message = e.response.data.error
-      } else {
-        message = 'Cannot like'
-      }
       console.log(e.response)
       // onUpdateFail(message)
     } finally {
@@ -42,12 +37,6 @@ const Blog = ({onUpdateSuccess, blog}) => {
         await blogService.removeById(id)
         onUpdateSuccess()
       } catch (e) {
-        let message = ''
-        if (e.response.data && e.response.data.error) {
-          message = e.response.data.error
-        } else {
-          message = 'Cannot like'
-        }
         console.log(e.response)
         // onUpdateFail(message)
       }
@@ -71,5 +60,10 @@ const Blog = ({onUpdateSuccess, blog}) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  onUpdateSuccess: PropTypes.func,
+  blog: PropTypes.object
 }
 export default Blog
