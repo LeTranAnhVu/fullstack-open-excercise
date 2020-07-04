@@ -1,10 +1,18 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import blogService from '../../services/blogs'
 import './Blog.css'
+import localstorage from '../../utils/localstorage'
 
 const Blog = ({onUpdateSuccess, blog}) => {
   const [isShow, setIsShow] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isAllowRemove, setIsAllowRemove] = useState(false)
+
+  useEffect(() => {
+    const {user} = blog
+    const loggedInUser = localstorage.getItem('user')
+    setIsAllowRemove(loggedInUser.id === user._id)
+  }, [blog])
 
   const handleLike = async () => {
     const {id} = blog
@@ -25,6 +33,26 @@ const Blog = ({onUpdateSuccess, blog}) => {
       setIsLoading(false)
     }
   }
+  const handleRemove = async () => {
+    const answer = window.confirm(`Delete blog ${blog.title} by ${blog.author}?`)
+    if (answer) {
+      const {id} = blog
+      setIsLoading(true)
+      try {
+        await blogService.removeById(id)
+        onUpdateSuccess()
+      } catch (e) {
+        let message = ''
+        if (e.response.data && e.response.data.error) {
+          message = e.response.data.error
+        } else {
+          message = 'Cannot like'
+        }
+        console.log(e.response)
+        // onUpdateFail(message)
+      }
+    }
+  }
 
   return (
     <div className={'blog'}>
@@ -37,6 +65,9 @@ const Blog = ({onUpdateSuccess, blog}) => {
         <p>likes {blog.likes}
           <button onClick={handleLike}>like</button>
         </p>
+        {
+          isAllowRemove && <button onClick={handleRemove}>Remove</button>
+        }
       </div>
     </div>
   )

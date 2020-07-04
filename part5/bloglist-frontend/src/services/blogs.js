@@ -42,5 +42,9 @@ const likeById = async (id) => {
   return response.data
 }
 
+const removeById = async (id) => {
+  const response = await axios.delete(`${baseUrl}/${id}`)
+  return response.data
+}
 
-export default {getAll, create, updateById, likeById}
+export default {getAll, create, updateById, likeById, removeById}

@@ -17,7 +17,7 @@ const App = () => {
     // check token
     const userEncoded = localstorage.getItem('user')
     if (userEncoded) {
-      setUser(JSON.parse(userEncoded))
+      setUser(userEncoded)
     }
   }, [])
   useEffect(() => {

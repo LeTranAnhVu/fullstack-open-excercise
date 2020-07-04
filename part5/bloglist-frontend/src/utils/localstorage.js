@@ -1,5 +1,13 @@
 const getItem = (key) => {
-  return window.localStorage.getItem(key)
+  let item = window.localStorage.getItem(key)
+  try {
+    const parsed = JSON.parse(item)
+    return parsed
+  }catch (e) {
+    return item
+  }
+
+
 }
 
 const saveItem = (key, value) => {
