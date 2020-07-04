@@ -54,7 +54,7 @@ const Blog = ({onUpdateSuccess, blog}) => {
         <p>{blog.author}</p>
         <p>{blog.url}</p>
         <p>likes {blog.likes}
-          <button onClick={handleLike}>like</button>
+          <button className={'like-btn'} onClick={handleLike}>like</button>
         </p>
         {
           isAllowRemove && <button onClick={handleRemove}>Remove</button>
