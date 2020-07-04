@@ -27,7 +27,7 @@ const App = () => {
   const fetchBlogs = async () => {
     const blogs = await blogService.getAll()
 
-    blogs.sort( (blogA, blogB) =>  blogB.likes - blogA.likes)
+    blogs.sort((blogA, blogB) => blogB.likes - blogA.likes)
     setBlogs(blogs)
   }
 
@@ -47,7 +47,6 @@ const App = () => {
   const onUpdateSuccess = () => {
     fetchBlogs()
   }
-
 
   const afterLogin = () => (
     <>
