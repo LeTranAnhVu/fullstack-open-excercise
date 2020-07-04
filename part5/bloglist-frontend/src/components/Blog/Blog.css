@@ -1,16 +1,33 @@
 .blog {
-  border: 1px #ccc solid;
-  padding: 10px;
+    margin: 10px;
+    border: 1px #ccc solid;
+    padding: 10px;
+    position: relative;
 }
 
-.blog p{
- margin: 0;
+.blog p {
+    margin: 0;
 }
 
 .blog-detail {
-  display: block;
+    display: block;
 }
 
 .blog-detail.hide {
-  display: none;
+    display: none;
+}
+
+.blog-overlay {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #ccccccbd;
+}
+
+
+.blog-overlay.show{
+    display: block;
 }

@@ -32,5 +32,15 @@ const create = async (payload) => {
   return response.data
 }
 
+const updateById = async (id, payload) => {
+  const response = await axios.put(`${baseUrl}/${id}`, payload)
+  return response.data
+}
 
-export default {getAll, create}
+const likeById = async (id) => {
+  const response = await axios.patch(`${baseUrl}/${id}/like`)
+  return response.data
+}
+
+
+export default {getAll, create, updateById, likeById}

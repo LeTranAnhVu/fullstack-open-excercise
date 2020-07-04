@@ -26,6 +26,8 @@ const App = () => {
 
   const fetchBlogs = async () => {
     const blogs = await blogService.getAll()
+
+    blogs.sort( (blogA, blogB) =>  blogB.likes - blogA.likes)
     setBlogs(blogs)
   }
 
@@ -41,6 +43,11 @@ const App = () => {
     localstorage.clearAll()
     setUser(null)
   }
+
+  const onUpdateSuccess = () => {
+    fetchBlogs()
+  }
+
 
   const afterLogin = () => (
     <>
@@ -60,7 +67,7 @@ const App = () => {
           afterLogin()
       }
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog}/>
+        <Blog key={blog.id} onUpdateSuccess={onUpdateSuccess} blog={blog}/>
       )}
     </div>
   )
