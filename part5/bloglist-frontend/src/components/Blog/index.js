@@ -12,7 +12,9 @@ const Blog = ({onUpdateSuccess, blog}) => {
   useEffect(() => {
     const {user} = blog
     const loggedInUser = localstorage.getItem('user')
-    setIsAllowRemove(loggedInUser.id === user._id)
+    if (user && loggedInUser) {
+      setIsAllowRemove(loggedInUser.id === user._id)
+    }
   }, [blog])
 
   const handleLike = async () => {
@@ -46,8 +48,8 @@ const Blog = ({onUpdateSuccess, blog}) => {
   return (
     <div className={'blog'}>
       <div className={`blog-overlay ${isLoading ? 'show' : ''}`}/>
-      {blog.title}
-      <button onClick={() => setIsShow(!isShow)}>{isShow ? 'hide' : 'show'}</button>
+      <p className={'title'}>{blog.title}</p>
+      <button className={'show-more-btn'} onClick={() => setIsShow(!isShow)}>{isShow ? 'hide' : 'show'}</button>
       <div className={!isShow ? 'blog-detail hide' : 'blog-detail'}>
         <p>{blog.author}</p>
         <p>{blog.url}</p>
